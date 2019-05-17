@@ -1,0 +1,20 @@
+if [ -n "$1" ]  #  If command-line argument present,
+then
+    if [ $1 = 'server' ]
+    then
+        # docker-compose up -d
+        docker exec -it DBB-server /bin/sh
+    elif [ $1 = 'client' ]
+    then
+        # docker-compose up -d
+        docker exec -it DBB-client /bin/sh
+    elif [ $1 = 'mysql' ]
+    then
+       docker exec -it react-go_mysql_1_dbc226d1251f /bin/sh -c "mysql -u root"
+    elif [ $1 = 'prisma' ]
+    then
+        docker exec -it react-go_prisma_1_a2df8dae6d77 /bin/sh
+    fi
+else
+    echo "Please enter one of these arguments: api or admin"
+fi

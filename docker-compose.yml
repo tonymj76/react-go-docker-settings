@@ -1,0 +1,55 @@
+version: '3'
+services:
+  server:
+    container_name: DBB-server
+    build:
+      context: ./server/
+    volumes:
+      - ./server/:/go/src/app
+    ports:
+      - "3500:3500"
+    links:
+        - mysql
+    depends_on:
+        - mysql
+    tty: true
+    restart: "no"
+    env_file: ./server/.env # TODO - uncomment this to auto-load your .env file!
+
+  prisma:
+    image: prismagraphql/prisma:1.26
+    restart: always
+    ports:
+    - "4477:4477"
+    environment:
+      PRISMA_CONFIG: |
+        port: 4477
+        databases:
+          default:
+            connector: mysql
+            host: mysql
+            port: 3306
+            user: root
+            password: prisma
+            migrations: true
+  client:
+    container_name: DBB-client
+    build:
+      context: ./client/
+    command: npm start
+    volumes:
+      - ./client/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+  mysql:
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: prisma
+    volumes:
+      - mysql:/var/lib/mysql
+volumes:
+  mysql:

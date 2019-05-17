@@ -1,0 +1,15 @@
+FROM node:10.13.0-alpine
+
+RUN mkdir -p /usr/app
+
+WORKDIR /usr/app
+
+COPY package*.json ./
+
+RUN npm install -qy
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]

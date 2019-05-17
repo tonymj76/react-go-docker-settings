@@ -1,0 +1,29 @@
+type User {
+  id: ID! @unique
+  email: String! @unique
+  firstName: String!
+  lastName: String!
+  userName: String!
+  gender: String!
+  images: [Image!]! @relation(name:"UserImages" onDelete: CASCADE)
+  isAdmin: Boolean! @default(value:"false")
+  # address: Address  @relation(name:"UserAddress" onDelete: CASCADE)
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+# dbb-website-232417
+type Image{
+  id: ID! @unique
+  name: String!
+  userImage: User @relation(name:"UserImages")
+}
+
+# type Address {
+#   id: ID! @unique
+#   addressName: String!
+#   state: String!
+#   city: String! @default(value:"Calaber")
+#   country: String! @default(value:"Nigeria")
+#   userAddress: User @relation(name:"UserAddress")
+# }

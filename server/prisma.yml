@@ -1,0 +1,31 @@
+endpoint: http://localhost:4477/server/dev
+
+# The endpoint represents the HTTP endpoint for your Prisma API.
+# It encodes several pieces of information:
+# * Prisma server (`localhost:4466` in this example)
+# * Service name (`myservice` in this example)
+# * Stage (`dev` in this example)
+# NOTE: When service name and stage are set to `default`, they
+# can be omitted.
+# Meaning http://myserver.com/default/default can be written
+# as http://myserver.com.
+datamodel: datamodel.prisma
+
+# The secret is used to create JSON web tokens (JWTs). These
+# tokens need to be attached in the `Authorization` header
+# of HTTP requests made against the Prisma endpoint.
+# WARNING: If the secret is not provided, the Prisma API can
+# be accessed without authentication!
+secret: ${env:DBB_SECRET}
+generate:
+ - generator: go-client
+   output: ./generated/prisma-client/
+#  - generator: graphql-schema
+#    output: ./service/
+
+# To ensure that your prisma client is automatically being updated
+# after every deploy by adding the following lines here
+hooks:
+  post-deploy:
+    - prisma generate
+    - go run scripts/gqlgen.go
